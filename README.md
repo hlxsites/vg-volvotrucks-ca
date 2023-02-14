@@ -1,9 +1,9 @@
-# Your Project's Title...
-Your project's description...
+# Volvo Trucks Canada
+Franklin site for volvotrucks.ca
 
 ## Environments
-- Preview: https://main--{repo}--{owner}.hlx.page/
-- Live: https://main--{repo}--{owner}.hlx.live/
+- Preview: https://main--vg-volvotrucks-ca--hlxsites.hlx.page/
+- Live: https://main--vg-volvotrucks-ca--hlxsites.hlx.live/
 
 ## Installation
 
