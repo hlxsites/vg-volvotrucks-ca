@@ -408,6 +408,7 @@ export function decorateLinks(block) {
       if (url.host.match('build.volvotrucks.(us|ca)') || url.pathname.endsWith('.pdf') || url.pathname.endsWith('.jpeg') || external) {
         link.target = '_blank';
       }
+      link.href = link.href.replace(/\/$/, '');
     });
 }
 
