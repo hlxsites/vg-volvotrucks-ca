@@ -9,6 +9,8 @@ import {
   toClassName,
 } from '../../scripts/lib-franklin.js';
 
+const language = location.pathname.match(/\/(en|fr)-ca\//);
+
 function buildMagazineArticle(entry) {
   const {
     path,
@@ -65,7 +67,7 @@ function buildLatestMagazineArticle(entry) {
 }
 
 async function getFilterOptions() {
-  const resp = await fetch('/news-and-stories/tags.plain.html');
+  const resp = await fetch(`${language[0]}news-and-stories/tags.plain.html`);
   const markup = await resp.text();
   const div = document.createElement('div');
   div.innerHTML = markup;
@@ -147,7 +149,7 @@ async function createLatestMagazineArticles(mainEl, magazineArticles) {
 }
 
 async function getMagazineArticles(limit) {
-  const indexUrl = new URL('/magazine-articles.json', getOrigin());
+  const indexUrl = new URL(`${language[0]}magazine-articles.json`, getOrigin());
   let articles;
   if (limit) {
     articles = ffetch(indexUrl).limit(limit).all();
@@ -161,7 +163,7 @@ export default async function decorate(block) {
   const latest = block.classList.contains('latest');
   const limit = latest ? 3 : undefined;
   const limitPerPage = 8;
-  const magazineArticles = await getMagazineArticles(limit);
+  const magazineArticles = await getMagazineArticles(block, limit);
   if (latest) {
     createLatestMagazineArticles(block, magazineArticles);
   } else {

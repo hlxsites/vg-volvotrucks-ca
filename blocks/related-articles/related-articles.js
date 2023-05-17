@@ -9,6 +9,8 @@ import {
   toClassName,
 } from '../../scripts/lib-franklin.js';
 
+const language = location.pathname.match(/\/(en|fr)-ca\//);
+
 function buildRelatedMagazineArticle(entry) {
   const {
     path,
@@ -61,7 +63,7 @@ async function createRelatedtMagazineArticles(mainEl, magazineArticles) {
 }
 
 async function getRelatedMagazineArticles() {
-  const indexUrl = new URL('/magazine-articles.json', getOrigin());
+  const indexUrl = new URL(`${language[0]}magazine-articles.json`, getOrigin());
   const articles = ffetch(indexUrl).all();
   return articles;
 }
