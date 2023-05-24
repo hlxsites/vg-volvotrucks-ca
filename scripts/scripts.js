@@ -31,14 +31,9 @@ import {
   addSoundcloudShowHandler,
 } from './video-helper.js';
 
-const language = location.pathname.match(/\/(en|fr)-ca\//);
 const LCP_BLOCKS = ['teaser-grid']; // add your LCP blocks to the list
 window.hlx.RUM_GENERATION = 'project-1'; // add your RUM generation information here
 let placeholders = null;
-
-async function getPlaceholders() {
-  placeholders = await fetch(`${language[0]}placeholder.json`).then((resp) => resp.json());
-}
 
 export function getTextLabel(key) {
   return placeholders.data.find((el) => el.Key === key)?.Text || key;
