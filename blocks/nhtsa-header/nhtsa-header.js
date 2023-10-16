@@ -3,7 +3,7 @@ import { unwrapDivs } from '../../scripts/scripts.js';
 // hide buttons for, content if they are from same origin
 function hideButtons(buttons) {
   buttons.forEach((element) => {
-    element.classList.add('button', 'nhsta-header__langauge-switch');
+    element.classList.add('button', 'nhsta-header-langauge-switch');
     const url = element.href;
     const { location: { origin } = {} } = window.location.origin;
 

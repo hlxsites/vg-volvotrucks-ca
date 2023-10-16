@@ -1,24 +1,24 @@
-.vin-number__form {
+.vin-number-form {
   display: flex;
   gap: 8px;
   flex-direction: column;
 }
 
-.vin-number__input-wrapper {
+.vin-number-input-wrapper {
   position: relative;
 }
 
-.vin-number__form .vin-number__input {
+.vin-number-form .vin-number-input {
   margin: 0;
   max-width: 100%;
   padding: 22px;
 }
 
-.redesign-v2 .vin-number__form .vin-number__submit {
+.vin-number-form .vin-number-submit {
   max-width: 100%;
 }
 
-.vin-number__label {
+.vin-number-label {
   left: 16px;
   pointer-events: none;
   position: absolute;
@@ -30,58 +30,58 @@
   font-size: 16px;
 }
 
-.vin-number__input:focus ~ .vin-number__label,
-.vin-number__input:not(:placeholder-shown) ~ .vin-number__label,
-.vin-number__input:not(:focus):valid ~ .v2-forms__label {
+.vin-number-input:focus ~ .vin-number-label,
+.vin-number-input:not(:placeholder-shown) ~ .vin-number-label,
+.vin-number-input:not(:focus):valid ~ .v2-forms-label {
   bottom: 0;
   left: 0;
   top: 3px;
 }
 
 /* recalls list styling */
-.vin-number__results-container{
+.vin-number-results-container{
   padding: 20px 0;
 }
 
-.vin-number__recalls-wrapper {
+.vin-number-recalls-wrapper {
   margin-top: 40px;
 }
 
-.vin-number__recalls-heading {
+.vin-number-recalls-heading {
   display: flex;
   align-items: center;
   gap: 16px
 }
 
-.vin-number__list {
+.vin-number-list {
   list-style: none;
 }
 
-.vin-number__list-item {
+.vin-number-list-item {
   border-top: 1px solid var(--c-black);
   padding: 20px 0;
 }
 
-.vin-number__item-title:not(:first-child){
+.vin-number-item-title:not(:first-child){
   margin-top: 10px;
 }
 
-.vin-number__recall-incomplete,
-.vin-number__recall-incomplete-no-remedy {
+.vin-number-recall-incomplete,
+.vin-number-recall-incomplete-no-remedy {
   color: var(--c-error-red);
 }
 
-.vin-number__recall-complete {
+.vin-number-recall-complete {
   color: var(--c-leaf);
 }
 
 @media (min-width: 744px) {
-  .vin-number__form {
+  .vin-number-form {
     flex-direction: row;
     max-width: 100%;
   }
 
-  .vin-number__input-wrapper {
+  .vin-number-input-wrapper {
     flex: 1;
   }
 }

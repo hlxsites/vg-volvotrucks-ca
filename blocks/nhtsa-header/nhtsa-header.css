@@ -17,7 +17,7 @@
   height: 20px;
 }
 
-.nhtsa-header .nhsta-header__langauge-switch {
+.nhtsa-header .nhsta-header-langauge-switch {
   text-transform: uppercase;
   padding: 9px 21px;
   font-size: 16px;
@@ -29,19 +29,18 @@
   border-radius: 4px;
   background: var(--link-color);
   color: var(--c-white);
-  border: none;
 }
 
-.nhtsa-header .nhsta-header__langauge-switch::after {
+.nhtsa-header .nhsta-header-langauge-switch::after {
   content: '';
 }
 
-.nhtsa-header .nhsta-header__langauge-switch:hover,
-.nhtsa-header .nhsta-header__langauge-switch:focus {
+.nhtsa-header .nhsta-header-langauge-switch:hover,
+.nhtsa-header .nhsta-header-langauge-switch:focus {
   background-color: var(--link-hover-color);
 }
 
-.nhtsa-header .nhsta-header__langauge-switch:active {
+.nhtsa-header .nhsta-header-langauge-switch:active {
   background-color: var(--link-hover-color);
 }
 

@@ -34,34 +34,34 @@ const recallStatus = {
 };
 
 function renderRecalls(recallsData) {
-  const resultText = document.querySelector('.vin-number__results-text');
+  const resultText = document.querySelector('.vin-number-results-text');
   resultText.innerText = getTextLabel('result text').replace(/\${count}/, recallsData.number_of_recalls).replace(/\${vin}/, recallsData.vin);
 
   if (recallsData.recalls_available) {
-    const blockEl = document.querySelector('.vin-number__recalls-wrapper');
+    const blockEl = document.querySelector('.vin-number-recalls-wrapper');
     const listWrapperFragment = docRange.createContextualFragment(`
-      <span class="vin-number__recalls-heading"> 
+      <span class="vin-number-recalls-heading"> 
         <h4>${getTextLabel('recalls')}  &nbsp; &nbsp;</h4>
         <span> [Information last updated: ${recallsData.refresh_date}] </span>
       </span>
     `);
 
     // create each recall
-    const list = createElement('ul', 'vin-number__list');
+    const list = createElement('ul', 'vin-number-list');
     recallsData.recalls.forEach((recall) => {
-      const liEl = createElement('li', 'vin-number__list-item');
+      const liEl = createElement('li', 'vin-number-list-item');
 
       // map the number from api to correct status
       recall.mfr_recall_status = recallStatus[recall.mfr_recall_status];
 
       valueDisplayList.forEach((item) => {
-        const recallClass = item.key === 'mfr_recall_status' ? `vin-number__${recall.mfr_recall_status.replace(/ /g, '-').toLowerCase()}` : '';
+        const recallClass = item.key === 'mfr_recall_status' ? `vin-number-${recall.mfr_recall_status.replace(/ /g, '-').toLowerCase()}` : '';
         if (recallClass) {
           recall[item.key] = getTextLabel(recall[item.key]);
         }
         const itemFragment = docRange.createContextualFragment(`
-          <div class="vin-number__item-title subtitle-1"> ${getTextLabel(item.key)} </div>
-          <div class="vin-number__item-value ${recallClass}">${item.frenchKey && isFrench ? recall[item.frenchKey] : recall[item.key]}</div>
+          <div class="vin-number-item-title subtitle-1"> ${getTextLabel(item.key)} </div>
+          <div class="vin-number-item-value ${recallClass}">${item.frenchKey && isFrench ? recall[item.frenchKey] : recall[item.key]}</div>
         `);
         liEl.append(...itemFragment.children);
       });
@@ -80,10 +80,10 @@ async function fetchRecalls(e) {
     const submitBtn = e.target.querySelector('button');
     submitBtn.disabled = true;
 
-    const recalls = document.querySelector('.vin-number__recalls-wrapper');
+    const recalls = document.querySelector('.vin-number-recalls-wrapper');
     recalls.innerHTML = '';
 
-    const resultText = document.querySelector('.vin-number__results-text');
+    const resultText = document.querySelector('.vin-number-results-text');
     resultText.innerText = getTextLabel('loading recalls');
 
     const formData = new FormData(e.target);
@@ -99,7 +99,7 @@ async function fetchRecalls(e) {
               renderRecalls(response);
             }
 
-            const vinInput = document.querySelector('.vin-number__input');
+            const vinInput = document.querySelector('.vin-number-input');
             vinInput.value = '';
             submitBtn.disabled = false;
           });
@@ -114,9 +114,9 @@ async function fetchRecalls(e) {
 }
 
 export default async function decorate(block) {
-  const form = createElement('form', 'vin-number__form');
+  const form = createElement('form', 'vin-number-form');
   const formChildren = document.createRange().createContextualFragment(`
-    <div class="vin-number__input-wrapper">
+    <div class="vin-number-input-wrapper">
       <input
         type="text"
         name="vin"
@@ -126,18 +126,18 @@ export default async function decorate(block) {
         minlength="17"
         maxlength="17"
         required
-        class="vin-number__input"
+        class="vin-number-input"
         pattern="^[2][V,v,N,n,P,p][1,2,4,5,C,c,V,v,][B-C,E-H,J-N,R-S,V-Y,b-c,e-h,j-n,r-s,v-y][A-Za-z0-9]{13}$"
       />
-      <label for="vin_number" class="vin-number__label">${getTextLabel('vinlabel')}</label>
+      <label for="vin_number" class="vin-number-label">${getTextLabel('vinlabel')}</label>
     </div>
-    <button class="button primary vin-number__submit" type="submit" name="submit">${getTextLabel('submit')}</button>
+    <button class="button primary vin-number-submit" type="submit" name="submit">${getTextLabel('submit')}</button>
   `);
 
-  const vinResultsContainer = createElement('div', 'vin-number__results-container');
+  const vinResultsContainer = createElement('div', 'vin-number-results-container');
   const innerContent = docRange.createContextualFragment(`
-    <span class="vin-number__results-text"></span>
-    <div class="vin-number__recalls-wrapper"></div>
+    <span class="vin-number-results-text"></span>
+    <div class="vin-number-recalls-wrapper"></div>
   `);
 
   vinResultsContainer.append(innerContent);
@@ -147,7 +147,7 @@ export default async function decorate(block) {
   block.append(form);
   block.append(vinResultsContainer);
 
-  const vinInput = block.querySelector('.vin-number__input');
+  const vinInput = block.querySelector('.vin-number-input');
 
   vinInput.oninvalid = (e) => {
     e.target.setCustomValidity(getTextLabel('vinformat'));
