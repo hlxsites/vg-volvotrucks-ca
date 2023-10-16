@@ -28,9 +28,9 @@ const valueDisplayList = [{
 
 // use this to map values from API
 const recallStatus = {
-  11: getTextLabel('recall_incomplete'),
-  0: getTextLabel('recall_complete'),
-  12: getTextLabel('recall_incomplete_no_remedy'),
+  11: 'recall_incomplete',
+  0: 'recall_complete',
+  12: 'recall_incomplete_no_remedy',
 };
 
 function renderRecalls(recallsData) {
@@ -56,6 +56,9 @@ function renderRecalls(recallsData) {
 
       valueDisplayList.forEach((item) => {
         const recallClass = item.key === 'mfr_recall_status' ? `vin-number__${recall.mfr_recall_status.replace(/ /g, '-').toLowerCase()}` : '';
+        if (recallClass) {
+          recall[item.key] = getTextLabel(recall[item.key]);
+        }
         const itemFragment = docRange.createContextualFragment(`
           <div class="vin-number__item-title subtitle-1"> ${getTextLabel(item.key)} </div>
           <div class="vin-number__item-value ${recallClass}">${item.frenchKey && isFrench ? recall[item.frenchKey] : recall[item.key]}</div>
@@ -124,7 +127,7 @@ export default async function decorate(block) {
         maxlength="17"
         required
         class="vin-number__input"
-        pattern="^[2][V,v][1,2,4,5][K,N,R,W,k,n,r,w][A-Za-z0-9]{13}$"
+        pattern="^[2][V,v,N,n,P,p][1,2,4,5,C,c,V,v,][B-C,E-H,J-N,R-S,V-Y,b-c,e-h,j-n,r-s,v-y][A-Za-z0-9]{13}$"
       />
       <label for="vin_number" class="vin-number__label">${getTextLabel('vinlabel')}</label>
     </div>
