@@ -1,7 +1,7 @@
 {
-  "total": 25,
+  "total": 27,
   "offset": 0,
-  "limit": 25,
+  "limit": 27,
   "data": [
     {
       "Key": "Low resolution video message",
@@ -45,7 +45,7 @@
     }, 
     {
       "Key": "recalls",
-      "Text": "Recalls"
+      "Text": "RECALLS"
     },
     {
       "Key": "recall_date",
@@ -94,6 +94,14 @@
     {
       "Key": "mfr_notes",
       "Text": "Next steps"
+    }, 
+    {
+      "Key": "nhtsa_recall_number",
+      "Text": "NHTSA recall number"
+    },
+    {
+      "Key": "mfr_recall_number",
+      "Text": "Brand Recall number"
     }
   ],
   ":type": "sheet"

@@ -49,21 +49,38 @@
 
 .vin-number-recalls-heading {
   display: flex;
-  align-items: center;
   gap: 16px
 }
 
-.vin-number-list {
+.vin-number-date-text {
+  font-size: var(--body-font-size-s);
+}
+
+.vin-number-list,
+.vin-number-detail-list {
   list-style: none;
+  padding-left: 0;
+  margin: 0;
 }
 
 .vin-number-list-item {
-  border-top: 1px solid var(--c-black);
+  border-top: 1px solid var(--volvo-text-black);
   padding: 20px 0;
 }
 
-.vin-number-item-title:not(:first-child){
+.vin-number-detail-item {
+  display: flex;
+  gap: 16px;
   margin-top: 10px;
+}
+
+.vin-number-detail-item-column {
+  flex-direction: column;
+  gap: 0;
+}
+
+.vin-number-detail-title {
+  margin-bottom: 0;
 }
 
 .vin-number-recall-incomplete,
