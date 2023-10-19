@@ -39,9 +39,9 @@ const valueDisplayList = [{
 
 // use this to map values from API
 const recallStatus = {
-  11: 'recall_incomplete',
-  0: 'recall_complete',
-  12: 'recall_incomplete_no_remedy',
+  11: 'recall-incomplete',
+  0: 'recall-complete',
+  12: 'recall-incomplete-no-remedy',
 };
 
 function capitalize(text) {
