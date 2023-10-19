@@ -81,6 +81,10 @@
 
 .vin-number-detail-title {
   margin-bottom: 0;
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-ml);
+  line-height: 1.25;
+  letter-spacing: 0.25px;
 }
 
 .vin-number-recall-incomplete,
