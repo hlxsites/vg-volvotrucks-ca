@@ -73,6 +73,12 @@
   --btn-border-hover: #030333;
   --input-background-color: #f1f0ef;
 
+  /* Greyscale */
+  --c-grey-1: #e1dfdd;
+  --c-grey-2: #a7a8a9;
+  --c-grey-3: #888b8d;
+  --c-grey-4: #53565a;
+
   /* fonts */
   --ff-volvo-novum-medium: 'VolvoNovum-Medium', 'VolvoNovum-Medium Fallback', sans-serif;
   --ff-volvo-novum: 'VolvoNovum', 'VolvoNovum Fallback', sans-serif;
