@@ -1,20 +1,45 @@
-import { loadCSS } from '../../scripts/lib-franklin.js';
 // eslint-disable-next-line import/no-cycle
-import { createIframe, isLowResolutionVideoUrl } from '../../scripts/scripts.js';
+import { createElement, getTextLabel } from '../../scripts/common.js';
+import { decorateIcons, loadCSS } from '../../scripts/lib-franklin.js';
+import { createIframe, isLowResolutionVideoUrl } from '../../scripts/video-helper.js';
 
 const styles$ = new Promise((r) => {
   loadCSS(`${window.hlx.codeBasePath}/common/modal/modal.css`, r);
 });
 
 const HIDE_MODAL_CLASS = 'modal-hidden';
+let currentModalClasses = null;
+let currentInvokeContext = null;
+
+const createModalTopBar = (parentEl) => {
+  const topBar = document.createRange().createContextualFragment(`
+    <div class="modal-top-bar">
+      <div class="modal-top-bar-content">
+        <h2 class="modal-top-bar-heading" id="modal-heading"></h2>
+        <button type="button" class="modal-close-button" aria-label=${getTextLabel('close')}>
+          <span class="icon icon-close" aria-hidden="true" />
+        </button>
+      </div>
+    </div>
+  `);
+
+  decorateIcons(topBar);
+  parentEl.prepend(...topBar.children);
+  // eslint-disable-next-line no-use-before-define
+  parentEl.querySelector('.modal-close-button').addEventListener('click', () => hideModal());
+  parentEl.querySelector('.modal-top-bar').addEventListener('click', (event) => event.stopPropagation());
+};
 
 const createModal = () => {
-  const modalBackground = document.createElement('div');
+  document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`);
+  const modalBackground = createElement('div', { classes: ['modal-background', HIDE_MODAL_CLASS] });
+  modalBackground.setAttribute('role', 'dialog');
 
-  modalBackground.classList.add('modal-background', HIDE_MODAL_CLASS);
   modalBackground.addEventListener('click', () => {
-    // eslint-disable-next-line no-use-before-define
-    hideModal();
+    if (!modalBackground.classList.contains('modal-reveal')) {
+      // eslint-disable-next-line no-use-before-define
+      hideModal();
+    }
   });
 
   const keyDownAction = (event) => {
@@ -24,8 +49,8 @@ const createModal = () => {
     }
   };
 
-  const modalContent = document.createElement('div');
-  modalContent.classList.add('modal-content');
+  const modalContent = createElement('div', { classes: ['modal-content'] });
+  createModalTopBar(modalBackground);
   modalBackground.appendChild(modalContent);
   // preventing initial animation when added to DOM
   modalBackground.style = 'display: none';
@@ -36,25 +61,71 @@ const createModal = () => {
     event.stopPropagation();
   });
 
-  async function showModal(newUrl, beforeBanner, beforeIframe) {
+  const clearModalContent = () => {
+    modalContent.innerHTML = '';
+    modalContent.className = 'modal-content';
+    modalBackground.querySelector('.modal-top-bar-heading').textContent = '';
+  };
+
+  const handleNewContent = (newContent) => {
+    clearModalContent();
+    modalContent.scrollTo(0, 0);
+
+    const firstSection = newContent[0];
+
+    // checking if the first section contains one heading only
+    if (
+      firstSection.children.length === 1
+      && firstSection.children[0].children.length === 1
+      && /^H[1-6]$/.test(newContent[0].children[0].children[0].tagName)
+    ) {
+      const headingContent = firstSection.children[0].children[0].textContent;
+
+      modalBackground.querySelector('.modal-top-bar-heading').textContent = headingContent;
+      firstSection.style.display = 'none';
+      modalBackground.setAttribute('aria-labelledby', 'modal-heading');
+    } else {
+      modalBackground.removeAttribute('aria-labelledby');
+    }
+
+    modalContent.classList.add('modal-content--wide');
+    modalContent.append(...newContent);
+  };
+
+  async function showModal(newContent, {
+    beforeBanner, beforeIframe, modalClasses = [], invokeContext,
+  }) {
+    document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`);
+    currentInvokeContext = invokeContext;
+    // disabling focus for header, footer and main elements when modal is open
+    document.querySelectorAll('header, footer, main').forEach((el) => {
+      el.setAttribute('inert', 'inert');
+    });
     await styles$;
     modalBackground.style = '';
+    modalBackground.classList.add(...modalClasses);
+    currentModalClasses = modalClasses;
     window.addEventListener('keydown', keyDownAction);
 
-    if (newUrl) {
+    if (newContent && (typeof newContent !== 'string')) {
+      handleNewContent(newContent);
+    } else if (newContent) {
+      clearModalContent();
       let videoOrIframe = null;
-      if (isLowResolutionVideoUrl(newUrl)) {
+      if (isLowResolutionVideoUrl(newContent)) {
         // We can't use the iframe for videos, because if the Content-Type
         // `application/octet-stream` is returned instead of `video/mp4`, the
         // file is downloaded instead of displayed. So we use the video element instead.
         videoOrIframe = document.createElement('video');
-        videoOrIframe.setAttribute('src', newUrl);
+        videoOrIframe.setAttribute('src', newContent);
         videoOrIframe.setAttribute('controls', '');
         videoOrIframe.setAttribute('autoplay', '');
         videoOrIframe.classList.add('modal-video');
+        modalBackground.classList.add('modal--video');
         modalContent.append(videoOrIframe);
       } else {
-        videoOrIframe = createIframe(newUrl, { parentEl: modalContent, classes: 'modal-video' });
+        videoOrIframe = createIframe(newContent, { parentEl: modalContent, classes: 'modal-video' });
+        modalBackground.classList.add('modal--video');
       }
 
       if (beforeBanner) {
@@ -62,12 +133,6 @@ const createModal = () => {
         bannerWrapper.classList.add('modal-before-banner');
         bannerWrapper.addEventListener('click', (event) => event.stopPropagation());
         bannerWrapper.appendChild(beforeBanner);
-        const closeButton = document.createElement('button');
-        closeButton.classList.add('modal-close-button');
-        closeButton.innerHTML = '<i class="fa fa-close"></i>';
-        bannerWrapper.appendChild(closeButton);
-        // eslint-disable-next-line no-use-before-define
-        closeButton.addEventListener('click', () => hideModal());
 
         videoOrIframe.before(bannerWrapper);
       }
@@ -82,19 +147,48 @@ const createModal = () => {
 
     modalContent.classList.add('modal-content-fade-in');
     modalBackground.classList.remove(HIDE_MODAL_CLASS);
+    modalBackground.querySelector('.modal-top-bar .modal-close-button').focus();
+    modalBackground.setAttribute('aria-hidden', 'false');
 
     // disable page scrolling
-    document.body.classList.add('disable-scroll');
+    document.body.classList.add('disable-body-scroll');
+    const scrollY = document.documentElement.style.getPropertyValue('--scroll-y');
+    const { body } = document;
+    document.documentElement.style.scrollBehavior = 'auto';
+    body.style.position = 'fixed';
+    body.style.top = `-${scrollY}`;
   }
 
   function hideModal() {
+    // restoring focus for header, footer and main elements when modal is close
+    document.querySelectorAll('header, footer, main').forEach((el) => {
+      el.removeAttribute('inert');
+    });
+    if (currentInvokeContext) {
+      currentInvokeContext.focus();
+    }
+    currentInvokeContext = null;
+    modalContent.scrollTo(0, 0);
     modalBackground.classList.add(HIDE_MODAL_CLASS);
+    modalBackground.classList.remove('modal--video');
     modalContent.classList.remove('modal-content-fade-in');
     window.removeEventListener('keydown', keyDownAction);
-    document.body.classList.remove('disable-scroll');
-    modalContent.querySelector('iframe, video').remove();
+    document.body.classList.remove('disable-body-scroll');
+    const { body } = document;
+    const scrollY = body.style.top;
+    body.style.position = '';
+    body.style.top = '';
+    window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+    document.documentElement.style.scrollBehavior = '';
+    modalContent.querySelector('iframe, video')?.remove();
     modalContent.querySelector('.modal-before-banner')?.remove();
     modalContent.querySelector('.modal-before-iframe')?.remove();
+    modalBackground.setAttribute('aria-hidden', 'true');
+
+    if (currentModalClasses.length) {
+      modalBackground.classList.remove(currentModalClasses);
+      currentModalClasses = null;
+    }
   }
 
   return {

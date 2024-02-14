@@ -1,3 +1,4 @@
+import { getLanguagePath } from '../../scripts/common.js';
 import {
   ffetch,
   splitTags,
@@ -5,11 +6,9 @@ import {
 import {
   createOptimizedPicture,
   getMetadata,
+  getOrigin,
   toClassName,
 } from '../../scripts/lib-franklin.js';
-
-// eslint-disable-next-line no-restricted-globals
-const language = location.pathname.match(/\/(en|fr)-ca\//);
 
 function buildRelatedMagazineArticle(entry) {
   const {
@@ -28,7 +27,7 @@ function buildRelatedMagazineArticle(entry) {
   ${pictureTag}
   </a>
   <div class="content">
-  <ul><li>${date.toLocaleDateString('en-CA')}</li></ul>
+  <ul><li>${date.toLocaleDateString()}</li></ul>
   <h3><a href="${path}">${title}</a></h3>
   <ul>
   <li>${author}</li>
@@ -63,7 +62,7 @@ async function createRelatedtMagazineArticles(mainEl, magazineArticles) {
 }
 
 async function getRelatedMagazineArticles() {
-  const indexUrl = new URL(`${language[0]}magazine-articles.json`, window.location.origin);
+  const indexUrl = new URL(`${getLanguagePath()}magazine-articles.json`, getOrigin());
   const articles = ffetch(indexUrl).all();
   return articles;
 }

@@ -1,17 +1,19 @@
+import { getLanguagePath } from '../../scripts/common.js';
 import {
   ffetch,
   createList,
   splitTags,
 } from '../../scripts/lib-ffetch.js';
 import {
-  toClassName,
   createOptimizedPicture,
+  getMetadata,
+  getOrigin,
   readBlockConfig,
+  toClassName,
 } from '../../scripts/lib-franklin.js';
 
+const locale = getMetadata('locale');
 const stopWords = ['a', 'an', 'the', 'and', 'to', 'for', 'i', 'of', 'on', 'into'];
-// eslint-disable-next-line no-restricted-globals
-const language = location.pathname.match(/\/(en|fr)-ca\//);
 
 function createPressReleaseFilterFunction(activeFilters) {
   return (pr) => {
@@ -46,7 +48,7 @@ function createFilter(pressReleases, activeFilters, createDropdown, createFullTe
 }
 
 function getPressReleases(limit, filter) {
-  const indexUrl = new URL(`${language[0]}press-releases.json`, window.location.origin);
+  const indexUrl = new URL(`${getLanguagePath()}press-releases.json`, getOrigin());
   let pressReleases = ffetch(indexUrl);
   if (filter) pressReleases = pressReleases.filter(filter);
   if (limit) pressReleases = pressReleases.limit(limit);
@@ -69,7 +71,7 @@ function buildPressReleaseArticle(entry) {
     ${pictureTag}
   </a>
   <div>
-    <span class="date">${date.toLocaleDateString('en-CA')}</span>
+    <span class="date">${date.toLocaleDateString(locale)}</span>
     <h3><a href="${path}">${title}</a></h3>
     <p>${description}</p>
   </div>`;

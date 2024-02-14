@@ -1,4 +1,4 @@
-.eloqua-form {
+.eloqua-form.block {
   font-size: 16px;
   max-width: 960px;
   margin: auto;
@@ -32,7 +32,7 @@
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
-  background: var(--link-color);
+  background: var(--c-cta-blue-default);
   color: var(--c-white);
   border: none;
   margin-bottom: 30px;
@@ -40,6 +40,12 @@
 }
 
 .eloqua-form input[type="checkbox"] {
+  width: auto;
+}
+
+.eloqua-form input[type="radio"],
+.eloqua-form input[type="checkbox"] {
+  display: inline-block;
   width: auto;
 }
 
@@ -67,7 +73,7 @@
   line-height: 24px;
   margin-top: -12px;
   content: "\f107";
-  color: var(--link-color);
+  color: var(--c-cta-blue-default);
   pointer-events: none;
 }
 
@@ -82,4 +88,29 @@
 
 .eloqua-form span.LV_validation_message.LV_valid {
   display: none;
+}
+
+.eloqua-form .hidden,
+.eloqua-form .elq-form .hidden {
+  display: none;
+}
+
+.eloqua-form .eloqua-thank-you {
+  text-align: center;
+}
+
+.eloqua-form-no-cookie {
+  min-height: 100px;
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+}
+
+.eloqua-form-no-cookie button {
+  background: unset;
+  font-size: inherit;
+  padding: 0;
+  color: var(--link-color);
+  margin: auto;
+  border: none;
 }

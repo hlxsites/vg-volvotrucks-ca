@@ -1,3 +1,4 @@
+import { getLanguagePath } from '../../scripts/common.js';
 import {
   ffetch,
   createList,
@@ -5,11 +6,12 @@ import {
 } from '../../scripts/lib-ffetch.js';
 import {
   createOptimizedPicture,
+  getMetadata,
+  getOrigin,
   toClassName,
 } from '../../scripts/lib-franklin.js';
 
-// eslint-disable-next-line no-restricted-globals
-const language = location.pathname.match(/\/(en|fr)-ca\//);
+const locale = getMetadata('locale');
 
 function buildMagazineArticle(entry) {
   const {
@@ -31,7 +33,7 @@ function buildMagazineArticle(entry) {
     ${pictureTag}
     </a>
     <div class="content">
-    <ul><li>${date.toLocaleDateString('en-CA')}</li>
+    <ul><li>${date.toLocaleDateString(locale)}</li>
     ${(category ? categoryItem.textContent(category) : '')}</ul>
     <h3><a href="${path}">${title}</a></h3>
     <p>${description}</p>
@@ -67,7 +69,7 @@ function buildLatestMagazineArticle(entry) {
 }
 
 async function getFilterOptions() {
-  const resp = await fetch(`${language[0]}news-and-stories/tags.plain.html`);
+  const resp = await fetch(`${getLanguagePath()}news-and-stories/tags.plain.html`);
   const markup = await resp.text();
   const div = document.createElement('div');
   div.innerHTML = markup;
@@ -148,8 +150,8 @@ async function createLatestMagazineArticles(mainEl, magazineArticles) {
   });
 }
 
-async function getMagazineArticles(block, limit) {
-  const indexUrl = new URL(`${language[0]}magazine-articles.json`, window.location.origin);
+async function getMagazineArticles(limit) {
+  const indexUrl = new URL(`${getLanguagePath()}magazine-articles.json`, getOrigin());
   let articles;
   if (limit) {
     articles = ffetch(indexUrl).limit(limit).all();
@@ -163,7 +165,7 @@ export default async function decorate(block) {
   const latest = block.classList.contains('latest');
   const limit = latest ? 3 : undefined;
   const limitPerPage = 8;
-  const magazineArticles = await getMagazineArticles(block, limit);
+  const magazineArticles = await getMagazineArticles(limit);
   if (latest) {
     createLatestMagazineArticles(block, magazineArticles);
   } else {

@@ -1,10 +1,10 @@
 import { Feed } from 'feed';
 import fs from 'fs';
 
-const endpoint = process.argv[2];
-const feedInfoEndpoint = process.argv[3];
-const targetDirectory = process.argv[4];
-const targetFile = `${targetDirectory}/feed.xml`;
+const endpoint = process.env.NEWS_ENDPOINT;
+const feedInfoEndpoint = process.env.NEWS_FEED_INFO_ENDPOINT;
+const targetDirectory = process.env.NEWS_TARGET_DIRECTORY;
+const targetFile = `${process.env.NEWS_TARGET_DIRECTORY}/feed.xml`;
 const limit = 1000;
 
 async function main() {
@@ -22,7 +22,7 @@ async function main() {
     description: feedMetadata.description,
     id: feedMetadata.link,
     link: feedMetadata.link,
-    updated: newestPost.toLocaleDateString('en-CA'),
+    updated: newestPost,
     generator: 'AEM News feed generator (GitHub action)',
     language: feedMetadata.lang,
   });
@@ -34,8 +34,8 @@ async function main() {
       id: link,
       link,
       content: post.description,
-      date: new Date(post.publishDate * 1000).toLocaleDateString('en-CA'),
-      published: new Date(post.publishDate * 1000).toLocaleDateString('en-CA'),
+      date: new Date(post.publishDate * 1000),
+      published: new Date(post.publishDate * 1000),
     });
   });
 
