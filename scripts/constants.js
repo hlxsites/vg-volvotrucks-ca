@@ -1,5 +1,5 @@
 // ONE TRUST COOKIE CONSENT
-export const DATA_DOMAIN_SCRIPT = 'e8ffed56-4bb1-43fd-9b41-bc4385267ec8';
+export const DATA_DOMAIN_SCRIPT = '89d2ae5d-6279-4a98-aa0d-be688cfceef3';
 
 // GOOGLE TAG MANAGER ID
 export const GTM_ID = 'GTM-KP9KZWR';
