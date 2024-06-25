@@ -2,8 +2,8 @@
 Franklin site redesign for volvotrucks.ca
 
 ## Environments
-- Preview: https://main--vg-volvotrucks-ca--hlxsites.hlx.page/
-- Live: https://main--vg-volvotrucks-ca--hlxsites.hlx.live/
+- Preview: https://main--vg-volvotrucks-ca--hlxsites.aem.page/
+- Live: https://main--vg-volvotrucks-ca--hlxsites.aem.live/
 
 ## Installation
 
