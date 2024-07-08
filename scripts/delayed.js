@@ -6,13 +6,15 @@ import {
   isSocialAllowed,
   extractObjectFromArray,
   COOKIE_CONFIGS,
+  createElement,
 } from './common.js';
 
 // COOKIE ACCEPTANCE AND IDs default to false in case no ID is present
-const { 
+const {
   FACEBOOK_PIXEL_ID = false,
   HOTJAR_ID = false,
   GTM_ID = false,
+  GA4_ID = false,
   DATA_DOMAIN_SCRIPT = false,
   ACC_ENG_TRACKING = false,
   TIKTOK_PIXEL_ID = false,
@@ -28,6 +30,7 @@ sampleRUM('cwv');
 
 if (isPerformanceAllowed()) {
   GTM_ID && loadGoogleTagManager();
+  GA4_ID && loadGoogleAnalytics();
   HOTJAR_ID && loadHotjar();
 }
 
@@ -97,6 +100,26 @@ async function loadGoogleTagManager() {
   }(window, document, 'script', 'dataLayer', GTM_ID));
 }
 
+async function loadGoogleAnalytics() {
+  // Google Analytics
+  const gtm = createElement('script', {
+    props: {
+      async: true,
+      src: 'https://www.googletagmanager.com/gtag/js?id=' +  GA4_ID,
+    },
+  });
+  document.head.appendChild(gtm);
+
+  await new Promise((resolve) => {
+    gtm.addEventListener('load', resolve);
+  });
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', GA4_ID);
+};
+
 async function loadFacebookPixel() {
   // FaceBook Pixel
   /* eslint-disable */
@@ -145,8 +168,8 @@ if (document.querySelector('.studio-widget-autosuggest-results')) {
 async function loadAccountEngagementTracking() {
   const body = document.querySelector('body');
   const script = document.createElement('script');
+
   script.type = 'text/javascript';
-  
   script.text = `piAId = '${piAId}'; piCId = '${piCId}'; piHostname = '${piHostname}'; (function() { function async_load(){ var s = document.createElement('script'); s.type = 'text/javascript'; s.src = ('https:' == document.location.protocol ? 'https://pi' : 'http://cdn') + '.pardot.com/pd.js'; var c = document.getElementsByTagName('script')[0]; c.parentNode.insertBefore(s, c); } if(window.attachEvent) { window.attachEvent('onload', async_load); } else { window.addEventListener('load', async_load, false); } })();`;
 
   body.append(script);
